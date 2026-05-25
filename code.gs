@@ -27,6 +27,16 @@ function doGet(e) {
     const name = (e.parameter && e.parameter.name) || '';
     return _json({ ok: true, data: getStudentProgress(name) });
   }
+  if (fn === 'imageMap') {
+    // 드라이브에 올린 이미지 → 공개 URL 매핑. ImageSetup.gs 의 linkImageDriveFolder 가 한 번 돌아갔어야 함.
+    let imageMap = {};
+    try {
+      if (typeof getImageMap_ === 'function') imageMap = getImageMap_() || {};
+    } catch (err) {
+      Logger.log('imageMap fetch failed: ' + err);
+    }
+    return _json({ ok: true, data: imageMap });
+  }
 
   // fn 이 없으면 옛 HTML 앱 방식으로 동작 (호환용)
   return HtmlService.createTemplateFromFile('Index')
